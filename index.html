@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wage Thief</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <style>
+        /* 타임테이블 컨테이너 */
+        .time-table-container {
+          width: 100%;
+          height: 100%;
+          position: relative;
+        }
+        
+        /* 타임테이블 */
+        .time-table {
+          width: 450px;
+          height: 380px;
+          background: #f6f6f6;
+          box-shadow: 0px 0px 7px #a1a1a1;
+          border-radius: 10px;
+          border: 1px solid #909d7b;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        /* 타임테이블 헤더 */
+        .time-table-header {
+          display: flex;
+          background: white;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          border-bottom: 1px solid #909d7b;
+        }
+        
+        .time-table-header-cell {
+          width: 68px;
+          /* flex: 1; */
+          text-align: center;
+          font-size: 20px;
+          font-family: Inter, sans-serif;
+          font-weight: 500;
+          color: #6b573f;
+          padding: 5px 0;
+        }
+        
+        /* 타임테이블 바디 */
+        .time-table-body {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .time-row {
+          display: flex;
+          height: 25px;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .time-cell {
+          width: 40px;
+          text-align: center;
+          font-size: 12px;
+          font-family: Inter, sans-serif;
+          font-weight: 500;
+          color: #6b573f;
+          line-height: 50px;
+        }
+        
+        .time-slot {
+          flex: 1;
+          position: relative;
+          background: #968a7b;
+          border: 0.5px solid rgba(255, 255, 255, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 13px;
+          font-family: Geologica, sans-serif;
+          font-weight: 500;
+        }
+        
+        /* 예약된 이름 표시 */
+        .time-slot[data-name] {
+          background: #154a17;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container" id="logoContainer">
+            <img src="logo.png" alt="Logo" />
+        </div>
+        <div class="header-right">
+            <div class="header-calender-container">
+                <img src="static/icon/whiteCalender.svg" alt="Calendar" class="calender-icon">
+                <div class="header-calender-text">2023년 10월 15일</div>
+            </div>
+            <div class="header-clock-container">
+                <div style="width: 355px; height: 73px; color: white; font-size: 70px; font-family: Hiragino Kaku Gothic ProN; font-weight: 600; word-wrap: break-word">15  :  27 </div>
+            </div>
+            <div class="header-cash-container">
+                <img src="static/icon/cash.svg" alt="Cash" class="cash-icon">
+                <div class="header-cash-status">2,000,000</div>
+            </div>
+        </div>
+    </header>
+    <div class="main-container">
+        <!-- 사이드바 -->
+        <div class="sidebar d-flex flex-column flex-shrink-0 p-3" style="width: 309px; height: 791px; background-color: rgba(44, 113, 46, 1);">
+            <div class="dropdown sidebar-user-info">
+                <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="/static/icon/chatBotUser.svg" alt="" width="60" height="60" class="me-2">
+                <strong>김 건</strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow">
+                    <li><a class="dropdown-item" href="#">계정 정보</a></li>
+                    <li><a class="dropdown-item" href="#">계정 관리</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">로그아웃</a></li>
+                </ul>
+            </div>
+            <hr>
+            <div class="sidebar-menu">
+                <div class="sidebar-menu-item">
+                    <img src="static/icon/sidebarCash.svg" alt="Cash" class="cash-icon">
+                    R캐쉬 충전
+                </div>
+                <div class="sidebar-menu-item">
+                    <img src="static/icon/sidebarClock.svg" class="reservation-icon">
+                    출퇴근 보고
+                </div>
+                <!-- 사이드바 메뉴 -->
+                <div class="sidebar-menu-item">
+                    <img src="static/icon/sidebarCal.svg" class="reservation-icon">
+                    직원 스케쥴표
+                </div>
+                <div class="sidebar-menu-item" onclick="toggleSidebar('noticePanel')">
+                    <img src="static/icon/solidList.svg">
+                    스크린골프장 운영수칙
+                </div>
+
+                <div class="sliding-panel" id="noticePanel">
+                    <div class="sliding-panel-content">
+                        <div class="sliding-panel-header">골프연습장 및<br>스크린골프장 이용 안내<br>(Golf Information)</div>
+                        <div class="sliding-panel-text">
+                            1. 골프연습장 및 스크린골프장 이용요금은 [별지서식1]에 따른다. <br>
+                            2. 골프장 안전규칙을 숙지하시고 정숙하게 사용한다. <br>
+                            3. 시설물이 아닌 개인부주의로 인한 안전사고 발생은 본인의 책임이다. <br>
+                            4. 타석 이외의 장소에서는 스윙을 금지하며 변칙된 골프연습을 삼간다. <br>
+                            5. 타석 출입 시 좌우를 확인하고 안전을 확보한 상태로 통행해야 한다. <br>
+                            6. 안전사고 위험으로 프로 외에는 골프 지도를 해선 안된다. <br>
+                            7. 골프장시설은 모두의 재산이므로 골프장 이용 시 타인에게 불쾌감을 주는 행동을 해선 안된다. <br>
+                            8. 바른 복장과 골프화를 착용해야 한다.
+                        </div>
+                        <img src="static/icon/close.svg" alt="Close" class="close-icon" onclick="toggleSidebar('noticePanel')">
+                    </div>
+                </div>
+                <div class="sidebar-menu-item" onclick="toggleSidebar('repairPanel')">
+                    <img src="static/icon/repair.svg">
+                    수리내용 저장소
+                </div>
+                <div class="sidebar-menu-item">
+                    <img src="static/icon/star.svg">
+                    관리비 정산
+                </div>
+            </div>
+            <div class="checklist-container">
+                <div class="checklist-header">
+                    <img src="static/icon/check.svg">
+                    <div class="checklist-header-text">체크리스트</div>
+                </div>
+                <div class="checklist-content-container">
+                    <div class="checklist-content-item" onclick="toggleCheckBox(this)">
+                        <img src="static/icon/checkBox.svg" class="checkbox">
+                        <!-- <img src="static/icon/checkedBox.svg"> -->
+                        <div class="checklist-content-item-text checkbox-text"> 3번방 램프 교체 </div>
+                    </div>
+                    <div class="checklist-content-item" onclick="toggleCheckBox(this)">
+                        <img src="static/icon/checkBox.svg" class="checkbox">
+                        <!-- <img src="static/icon/checkedBox.svg"> -->
+                        <div class="checklist-content-item-text checkbox-text"> 5번방 A/S 예정 </div>
+                    </div>
+                    <div class="checklist-content-item" onclick="toggleCheckBox(this)">
+                        <img src="static/icon/checkBox.svg" class="checkbox">
+                        <!-- <img src="static/icon/checkedBox.svg"> -->
+                        <div class="checklist-content-item-text checkbox-text"> 퇴근 보고 꼭 하기 </div>
+                    </div>
+                    <div class="checklist-content-item" onclick="toggleCheckBox(this)">
+                        <img src="static/icon/checkBox.svg" class="checkbox">
+                        <!-- <img src="static/icon/checkedBox.svg"> -->
+                        <div class="checklist-content-item-text checkbox-text"> 물티슈 신청 </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <!-- 사이드바 끝 -->
+        <!-- 컨텐츠 시작-->
+        <div class="main-content-container">
+            <div class="content-top-box">
+                <div class="content-box-1">
+                    <div style="color: #6B573F; font-size: 23px; font-family: Geologica; font-weight: 700; word-wrap: break-word">룸 관리</div>
+                    <hr style="margin: 11px;">
+                    <div class="rooms-container">
+                        <div class="room-1-container">
+                            <div class="room-header"  >
+                                <div class="room-number">1</div>
+                                <div class="room-name">이한나</div>
+                                <div onclick="toggleBeam(this)">
+                                    <img src="static/icon/beamOnOFF.svg" alt="Beam On/Off" class="beamOnOFF">
+                                </div>
+                                <div onclick="toggleLight(this)">
+                                    <img src="static/icon/lightOnOFF.svg" alt="Light On/Off" class="lightOnOFF">
+                                </div>
+                            </div>
+                            <div class="room-body">
+                                <div class="game-status-container">
+                                    <div class="game-status-left">
+                                        <div class="room-status">게임 중</div>
+                                        <div class="personIcon-container">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <div id="alertBox" class="message-send-alert-box" style="display: none;">메세지가<br> 전송되었습니다!</div>
+                                        </div>
+                                    </div>
+                                    <div class="game-status-right">
+                                        <img src="static/icon/setting.png" class="personIcon" alt="">
+                                    </div>
+                                </div>
+                                <div class="room-time">14:05 ~ 15:42</div>
+                            </div>
+                            <div class="room-footer">
+                                <img src="static/icon/clock.svg" onclick="toggleClockDropdown()" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div id="clockDropdown" class="clock-dropdown" style="display: none;">
+                                    <form id="clockForm">
+                                        <input type="text" id="clockInput" placeholder="ex) 5">분
+                                        <button type="submit">확인</button>
+                                    </form>
+                                </div>
+                                <div class="information-message">
+                                    <input type="text" class="room-message-input" placeholder="안내 메세지 입력">
+                                    </div> 
+                                <img src="static/icon/send.svg" onclick="showSendAlertBox()" style="width: 22px; height: 18px;">
+                            </div>
+                        </div>
+                        <div class="room-2-container">
+                            <div class="room-header">
+                                <span class="room-number">2</span>
+                                <span class="room-name">김건</span>
+                                <div onclick="toggleBeam(this)">
+                                    <img src="static/icon/beamOnOFF.svg" alt="Beam On/Off" class="beamOnOFF">
+                                </div>
+                                <div onclick="toggleLight(this)">
+                                    <img src="static/icon/lightOnOFF.svg" alt="Light On/Off" class="lightOnOFF">
+                                </div>
+                            </div>
+                            <div class="room-body">
+                                <div class="game-status-container">
+                                    <div class="game-status-left">
+                                        <div class="room-status">게임 중</div>
+                                        <div class="personIcon-container">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                        </div>
+                                    </div>
+                                    <div class="game-status-right">
+                                        <img src="static/icon/setting.png" class="personIcon" alt="">
+                                        <div id="alertBox" class="alert-box" style="display: block;">게임 인원 초과!</div>
+                                    </div>
+                                </div>
+                                <div class="room-time">14:23 ~ 15:19</div>
+                            </div>
+                            <div class="room-footer">
+                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div class="information-message">안내 메세지</div> 
+                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                            </div>
+                        </div>
+                        <div class="room-3-container">
+                            <div class="room-header">
+                                <span class="room-number">3</span>
+                                <span class="room-name">김민주</span>
+                                <div onclick="toggleBeam(this)">
+                                    <img src="static/icon/beamOnOFF.svg" alt="Beam On/Off" class="beamOnOFF">
+                                </div>
+                                <div onclick="toggleLight(this)">
+                                    <img src="static/icon/lightOnOFF.svg" alt="Light On/Off" class="lightOnOFF">
+                                </div>
+                            </div>
+                            <div class="room-body">
+                                <div class="game-status-container">
+                                    <div class="game-status-left">
+                                        <div class="room-status">게임 중</div>
+                                        <div class="personIcon-container">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">                             
+                                        </div>
+                                    </div>
+                                    <div class="game-status-right">
+                                        <img src="static/icon/setting.png" class="personIcon" alt="">
+                                    </div>
+                                </div>
+                                <div class="room-time">14:45 ~ 16:11</div>
+                            </div>
+                            <div class="room-footer">
+                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div class="information-message">안내 메세지</div> 
+                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                            </div>
+                        </div>
+                        <div class="room-4-container">
+                            <div class="room-header">
+                                <span class="room-number">4</span>
+                                <span class="room-name">이도연</span>
+                                <div onclick="toggleBeam(this)">
+                                    <img src="static/icon/beamOnOFF.svg" alt="Beam On/Off" class="beamOnOFF">
+                                </div>
+                                <div onclick="toggleLight(this)">
+                                    <img src="static/icon/lightOnOFF.svg" alt="Light On/Off" class="lightOnOFF">
+                                </div>
+                            </div>
+                            <div class="room-body">
+                                <div class="game-status-container">
+                                    <div class="game-status-left">
+                                        <div class="room-status">게임 중</div>
+                                        <div class="personIcon-container">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                        </div>
+                                    </div>
+                                    <div class="game-status-right">
+                                        <img src="static/icon/setting.png" class="personIcon" alt="">
+                                    </div>
+                                </div>
+                                <div class="room-time">14:05 ~ 15:42</div>
+                            </div>
+                            <div class="room-footer">
+                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;">
+                                <div class="information-message">안내 메세지</div> 
+                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                            </div>
+                        </div>
+                        <div class="room-5-container">
+                            <div class="room-header">
+                                <span class="room-number">5</span>
+                                <span class="room-name">권민서</span>
+                                <div onclick="toggleBeam(this)">
+                                    <img src="static/icon/beamOnOFF.svg" alt="Beam On/Off" class="beamOnOFF">
+                                </div>
+                                <div onclick="toggleLight(this)">
+                                    <img src="static/icon/lightOnOFF.svg" alt="Light On/Off" class="lightOnOFF">
+                                </div>
+                            </div>
+                            <div class="room-body">
+                                <div class="game-status-container">
+                                    <div class="game-status-left">
+                                        <div class="room-status">게임 중</div>
+                                        <div class="personIcon-container">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                        </div>
+                                    </div>
+                                    <div class="game-status-right">
+                                        <img src="static/icon/setting.png" class="personIcon" alt="">
+                                    </div>
+                                </div>
+                                <div class="room-time">14:05 ~ 15:42</div>
+                            </div>
+                            <div class="room-footer">
+                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div class="information-message">안내 메세지</div> 
+                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                            </div>
+                        </div>
+                        <div class="room-6-container">
+                            <div class="room-header">
+                                <span class="room-number">6</span>
+                                <span class="room-name"></span>
+                                <div onclick="toggleBeam(this)">
+                                    <img src="static/icon/beamOnOFF.svg" alt="Beam On/Off" class="beamOnOFF">
+                                </div>
+                                <div onclick="toggleLight(this)">
+                                    <img src="static/icon/lightOnOFF.svg" alt="Light On/Off" class="lightOnOFF">
+                                </div>
+                            </div>
+                            <div class="room-body">
+                                <div class="game-status-container">
+                                    <div class="game-status-left">
+                                        <div class="room-status">대기 중</div>
+                                        <div class="personIcon-container">
+                                            <!-- <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png">
+                                            <img src="static/icon/profile.png"> -->
+                                        </div>
+                                    </div>
+                                    <div class="game-status-right">
+                                        <img src="static/icon/setting.png" class="personIcon" alt="">
+                                    </div>
+                                </div>
+                                <div class="room-time">대기실</div>
+                            </div>
+                            <div class="room-footer">
+                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div class="information-message">안내 메세지</div> 
+                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="content-box-2">
+                    <div class="reservation-alarm-container">
+                        <div class="reservation-alarm-text">예약 알림</div>
+                        <div class="alarm-1">
+                            <div class="alarm-1-header">
+                                <div class="alarm-1-header-text">새로운 예약</div>
+                                <div class="alarm-1-header-time">15:48</div>
+                            </div>
+                            <div class="alarm-1-content">
+                                <div class="alarm-1-content-name">소지연</div>
+                                <div class="alarm-1-content-time">16:00 - 18:00</div>
+                            </div>
+                        </div>
+                        <div class="alarm-2-cancel">
+                            <div class="alarm-2-header">
+                                <div class="alarm-2-header-text">새로운 예약</div>
+                                <div class="alarm-2-header-time">15:48</div>
+                            </div>
+                            <div class="alarm-2-content">
+                                <div class="alarm-2-content-name">소지연</div>
+                                <div class="alarm-2-content-time">16:00 - 18:00</div>
+                            </div>
+                            <div class="alarm-2-cancel-text">승인</div>
+                        </div>
+                    </div>
+                    <div class="time-table-container">
+                        <div class="time-table">
+                            <!-- 타임테이블 헤더 -->
+                            <div class="time-table-header">
+                                <div style="width: 40px;"></div>
+                                <div class="time-table-header-cell">1</div>
+                                <div class="time-table-header-cell">2</div>
+                                <div class="time-table-header-cell">3</div>
+                                <div class="time-table-header-cell">4</div>
+                                <div class="time-table-header-cell">5</div>
+                                <div class="time-table-header-cell">6</div>
+                            </div>
+
+                            <!-- 타임테이블 바디 -->
+                            <div class="time-table-body">
+                                <img src="static/icon/Now.svg">
+                                <!-- 반복적으로 시간과 이름을 표시 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-bottom-box">
+                <div class="bottom-left-box">
+                    <div class="content-box-3">
+                        <div class="content-box-3-header">
+                            비품 관리
+                        </div>
+                        <hr style="margin: 11px;">
+                        <div class="content-box-3-content-row-1">
+                            <div class="content-box-3-content-row-1-item-1">
+                                <div style="color: #6B573F; width: 100px; margin-left: 11px; font-size: 17px; font-family: Geologica; font-weight: 400; word-wrap: break-word">빔 램프</div>
+                                <div class="object-count" style="color: #57A153; font-size: 12px; font-family: Geologica; font-weight: 400; word-wrap: break-word">4/6</div>
+                                <div class="content-box-3-content-button">발주<br/>신청</div>
+                            </div>
+                            <div class="content-box-3-content-row-1-item-2">
+
+                                <div style="color: #6B573F; width: 100px; margin-left: 11px; font-size: 17px; font-family: Geologica; font-weight: 400; word-wrap: break-word">러프매트</div>
+                                <img src="static/icon/alertTriangle.svg">
+                                <div class="object-count" style="color: #57A153; font-size: 12px; font-family: Geologica; font-weight: 400; word-wrap: break-word">1/6</div>
+                                
+                                <div class="content-box-3-content-button">발주<br/>신청</div>
+                            </div>
+                        </div>
+                        <div class="content-box-3-content-row-2">
+                            <div class="content-box-3-content-row-1-item-1">
+                                <div style="color: #6B573F; width: 100px; margin-left: 11px; font-size: 17px; font-family: Geologica; font-weight: 400; word-wrap: break-word">골프공</div>
+                                <div class="object-count" style="color: #57A153; font-size: 12px; font-family: Geologica; font-weight: 400; word-wrap: break-word">216/300</div>
+                                <div class="content-box-3-content-button">발주<br/>신청</div>
+                            </div>
+                            <div class="content-box-3-content-row-1-item-1">
+                                <div style="color: #6B573F; width: 100px; margin-left: 11px; font-size: 17px; font-family: Geologica; font-weight: 400; word-wrap: break-word">방향제</div>
+                                <div class="object-count"style="color: #57A153; font-size: 12px; font-family: Geologica; font-weight: 400; word-wrap: break-word">5/6</div>
+                                <!-- <img src="static/icon/alertTriangle.svg"> -->
+                                <div class="content-box-3-content-button">발주<br/>신청</div>
+                            </div>
+                        </div>
+                        <div class="content-box-3-content-row-3">
+                            <div class="content-box-3-content-row-1-item-1">
+                                <div style="color: #6B573F; width: 100px; margin-left: 11px; font-size: 17px; font-family: Geologica; font-weight: 400; word-wrap: break-word">휴지</div>
+                                <div class="object-count" style="color: #57A153; font-size: 12px; font-family: Geologica; font-weight: 400; word-wrap: break-word">15/75</div>
+                                <div class="content-box-3-content-button">발주<br/>신청</div>
+                            </div>
+                            <div class="content-box-3-content-row-1-item-1">
+                                <div style="color: #6B573F; width: 100px; margin-left: 11px; font-size: 17px; font-family: Geologica; font-weight: 400; word-wrap: break-word">스크린</div>
+                                <div class="object-count" style="color: #57A153; font-size: 12px; font-family: Geologica; font-weight: 400; word-wrap: break-word">6/6</div>
+                                <!-- <img src="static/icon/alertTriangle.svg"> -->
+                                <div class="content-box-3-content-button">발주<br/>신청</div>
+                            </div>
+                        </div>
+                        <div class="content-box-3-content-row-4">
+                            <div class="content-box-3-content-row-1-item-1">
+                                <div style="color: #6B573F; width: 100px; margin-left: 11px; font-size: 17px; font-family: Geologica; font-weight: 400; word-wrap: break-word">물티슈</div>
+                                <div class="object-count" style="color: #57A153; font-size: 12px; font-family: Geologica; font-weight: 400; word-wrap: break-word">9/75</div>
+                                <div class="content-box-3-content-button">발주<br/>신청</div>
+                            </div>
+                            <div class="content-box-3-content-row-1-item-1">
+                                <div style="color: #6B573F; width: 100px; margin-left: 11px; font-size: 17px; font-family: Geologica; font-weight: 400; word-wrap: break-word">고무티</div>
+                                <div class="object-count" style="color: #57A153; font-size: 12px; font-family: Geologica; font-weight: 400; word-wrap: break-word">8/12</div>
+                                <!-- <img src="static/icon/alertTriangle.svg"> -->
+                                <div class="content-box-3-content-button">발주<br/>신청</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-box-4">
+                        <div class="content-box-4-header">
+                            비상연락망
+                        </div>
+                        <div class="content-box-4-search">
+                            <img src="static/icon/search.svg" style="width: 22px; height: 18px;">
+                            <input style="border: none; height: 100%; font-size: 15px;" type="text" placeholder="검색" class="search-input" id="searchInput">
+                        </div>
+                        <hr style="margin: 11px;">
+                        <div class="content-box-4-content-scrollable" id="contactList">
+                            <div class="content-box-4-content-container">
+                                <div class="content-box-4-content-item-1"> 
+                                    <div class="phone-name">트레이너</div>
+                                    <div class="phone-num">010 - 1122 - 3344</div>
+                                </div>
+                            </div>
+                            <div class="content-box-4-content-container">
+                                <div class="content-box-4-content-item-1"> 
+                                    <div class="phone-name">1단지인포</div>
+                                    <div class="phone-num">010 - 2233 - 4455</div>
+                                </div>
+                            </div>
+                            <div class="content-box-4-content-container">
+                                <div class="content-box-4-content-item-1"> 
+                                    <div class="phone-name">2단지인포</div>
+                                    <div class="phone-num">010 - 3344 - 5566</div>
+                                </div>
+                            </div>
+                            <div class="content-box-4-content-container">
+                                <div class="content-box-4-content-item-1"> 
+                                    <div class="phone-name">관리소장</div>
+                                    <div class="phone-num">010 - 4455 - 6677</div>
+                                </div>
+                            </div>
+                            <div class="content-box-4-content-container">
+                                <div class="content-box-4-content-item-1"> 
+                                    <div class="phone-name">골프프로</div>
+                                    <div class="phone-num">010 - 5566 - 7788</div>
+                                </div>
+                            </div>
+                            <div class="content-box-4-content-container">
+                                <div class="content-box-4-content-item-1"> 
+                                    <div class="phone-name">센터장</div>
+                                    <div class="phone-num">010 - 6455 - 9876</div>
+                                </div>
+                            </div>
+                            <div class="content-box-4-content-container">
+                                <div class="content-box-4-content-item-1"> 
+                                    <div class="phone-name">팀장</div>
+                                    <div class="phone-num">010 - 8667 - 1234</div>
+                                </div>
+                            </div>
+                            <div class="content-box-4-content-container">
+                                <div class="content-box-4-content-item-1"> 
+                                    <div class="phone-name">경비실</div>
+                                    <div class="phone-num">010 - 9876 - 5432</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-right-box">
+                    <div class="content-box-5">
+                        <div class="content-box-4-header">
+                            챗봇
+                        </div>
+                        <hr style="margin: 11px;">
+                        <div class="chat-container" id="chatContainer">
+                            <!-- 챗봇 초기 메시지 -->
+                            <div class="bot-chat">
+                                <img src="static/icon/chatBot.svg" class="chat-icon">
+                                <div class="chat-bubble">무엇을 도와드릴까요?</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="userInput" placeholder="메시지를 입력하세요..." class="chat-input">
+                            <button id="sendButton" class="chat-send-button">전송</button>
+                        </div>
+                    </div>
+                    <div class="content-box-6">
+                        <div class="content-box-6-header">
+                            퇴근까지 남은 시간
+                        </div>
+                        <div class="content-box-6-content">
+                            <div class="content-box-6-text">퇴근까지 남은 시간은...</div>
+                            <div class="content-box-6-time" id="remainingTime">06시간 33분</div>
+                            <div class="content-box-6-animation">
+                                <img src="static/icon/running2.gif" class="running-gif">
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" id="progressBar"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>       
+        </div>
+        <!-- 컨텐츠 끝 -->            
+
+      
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+    <script>
+       
+    </script>
+</body>
+</html>
