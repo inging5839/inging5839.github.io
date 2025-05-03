@@ -453,7 +453,6 @@ header .logo-container > img {
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 15px;
     text-align: center;
-    
 }
 
 .room-footer img:hover {
@@ -498,6 +497,7 @@ header .logo-container > img {
     position: absolute; /* 절대 위치 지정 */
     top: 45px; /* 상단에서 10px 떨어진 위치 */
     left: 64px;
+    z-index: 300;
 }
 
 /* 알림창 스타일 */
@@ -1069,6 +1069,29 @@ header .logo-container > img {
 
 /* ----------------- 인터랙션 ------------------- */
 .clock-dropdown {
+    position: absolute;
+    top: 55%;
+    left: 7%;
+    width: 100px;
+    height: 30px;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    z-index: 1; /* Ensure it appears above other elements */
+    font-size: 10px;
+}
+
+.clock-input {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 40px;
+    text-align: center;
+}
+
+#clockDropdown {
     position: absolute;
     top: 55%;
     left: 7%;

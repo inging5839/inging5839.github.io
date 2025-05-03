@@ -1,5 +1,5 @@
-function toggleClockDropdown() {
-    const clockDropdown = document.getElementById('clockDropdown');
+function toggleClockDropdown(dropdownId) {
+    const clockDropdown = document.getElementById(dropdownId);
     if (clockDropdown.style.display === 'block') {
         clockDropdown.style.display = 'none';
     } else {
@@ -42,16 +42,27 @@ function toggleLight(element) {
     }
 }
 
-function showSendAlertBox() {
-    const alertBox = document.querySelector('.message-send-alert-box');
-    const messageInput = document.querySelector('.room-message-input');
-    alertBox.style.display = 'block'; // 알림창 표시
+function showSendAlertBox(button) {
+    // 클릭된 버튼의 부모 .room-container 찾기
+    const roomContainer = button.closest('.room-container');
+    if (!roomContainer) {
+        console.error('room-container를 찾을 수 없습니다.');
+        return;
+    }
 
-    messageInput.value = '';
-    // 3초 후 알림창 숨기기
-    setTimeout(() => {
-        alertBox.style.display = 'none';
-    }, 3000); // 3초 후 실행
+    const alertBox = roomContainer.querySelector('.message-send-alert-box'); // 해당 룸의 alertBox 선택
+    const messageInput = roomContainer.querySelector('.room-message-input'); // room-footer에서 입력 필드 선택
+
+    if (alertBox && messageInput) {
+        alertBox.style.display = 'block'; // 알림창 표시
+        messageInput.value = ''; // 입력 필드 초기화
+
+        setTimeout(() => {
+            alertBox.style.display = 'none'; // 3초 후 알림창 숨기기
+        }, 3000);
+    } else {
+        console.error('alertBox 또는 messageInput을 찾을 수 없습니다.');
+    }
 }
 
 

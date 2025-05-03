@@ -206,8 +206,8 @@
                     <div style="color: #6B573F; font-size: 23px; font-family: Geologica; font-weight: 700; word-wrap: break-word">룸 관리</div>
                     <hr style="margin: 11px;">
                     <div class="rooms-container">
-                        <div class="room-1-container">
-                            <div class="room-header"  >
+                        <div class="room-1-container room-container">
+                            <div class="room-header">
                                 <div class="room-number">1</div>
                                 <div class="room-name">이한나</div>
                                 <div onclick="toggleBeam(this)">
@@ -236,20 +236,20 @@
                                 <div class="room-time">14:05 ~ 15:42</div>
                             </div>
                             <div class="room-footer">
-                                <img src="static/icon/clock.svg" onclick="toggleClockDropdown()" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
-                                <div id="clockDropdown" class="clock-dropdown" style="display: none;">
-                                    <form id="clockForm">
-                                        <input type="text" id="clockInput" placeholder="ex) 5">분
+                                <img src="static/icon/clock.svg" onclick="toggleClockDropdown('clockDropdown-1')" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div id="clockDropdown-1" class="clock-dropdown" style="display: none;">
+                                    <form id="clockForm-1">
+                                        <input type="text" class="clock-input" id="clockInput-1" placeholder="ex) 5">분
                                         <button type="submit">확인</button>
                                     </form>
                                 </div>
                                 <div class="information-message">
                                     <input type="text" class="room-message-input" placeholder="안내 메세지 입력">
-                                    </div> 
-                                <img src="static/icon/send.svg" onclick="showSendAlertBox()" style="width: 22px; height: 18px;">
+                                </div>
+                                <img src="static/icon/send.svg" onclick="showSendAlertBox(this)" style="width: 22px; height: 18px;">
                             </div>
                         </div>
-                        <div class="room-2-container">
+                        <div class="room-2-container room-container">
                             <div class="room-header">
                                 <span class="room-number">2</span>
                                 <span class="room-name">김건</span>
@@ -268,22 +268,32 @@
                                             <img src="static/icon/profile.png">
                                             <img src="static/icon/profile.png">
                                             <img src="static/icon/profile.png">
+                                            <div id="alertBox" class="message-send-alert-box" style="display: none;">메세지가<br> 전송되었습니다!</div>
+
                                         </div>
                                     </div>
                                     <div class="game-status-right">
                                         <img src="static/icon/setting.png" class="personIcon" alt="">
-                                        <div id="alertBox" class="alert-box" style="display: block;">게임 인원 초과!</div>
+                                        <div class="alert-box" style="display: block;">게임 인원 초과!</div>
                                     </div>
                                 </div>
                                 <div class="room-time">14:23 ~ 15:19</div>
                             </div>
                             <div class="room-footer">
-                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
-                                <div class="information-message">안내 메세지</div> 
-                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                                <img src="static/icon/clock.svg" onclick="toggleClockDropdown('clockDropdown-2')" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div id="clockDropdown-2" class="clock-dropdown" style="display: none;">
+                                    <form id="clockForm-2">
+                                        <input type="text" class="clock-input" id="clockInput-2" placeholder="ex) 5">분
+                                        <button type="submit">확인</button>
+                                    </form>
+                                </div>
+                                <div class="information-message">
+                                    <input type="text" class="room-message-input" placeholder="안내 메세지 입력">
+                                </div>
+                                <img src="static/icon/send.svg" onclick="showSendAlertBox(this)" style="width: 22px; height: 18px;">
                             </div>
                         </div>
-                        <div class="room-3-container">
+                        <div class="room-3-container room-container">
                             <div class="room-header">
                                 <span class="room-number">3</span>
                                 <span class="room-name">김민주</span>
@@ -300,7 +310,8 @@
                                         <div class="room-status">게임 중</div>
                                         <div class="personIcon-container">
                                             <img src="static/icon/profile.png">
-                                            <img src="static/icon/profile.png">                             
+                                            <img src="static/icon/profile.png">
+                                            <div id="alertBox" class="message-send-alert-box" style="display: none;">메세지가<br> 전송되었습니다!</div>                             
                                         </div>
                                     </div>
                                     <div class="game-status-right">
@@ -310,12 +321,20 @@
                                 <div class="room-time">14:45 ~ 16:11</div>
                             </div>
                             <div class="room-footer">
-                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
-                                <div class="information-message">안내 메세지</div> 
-                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                                <img src="static/icon/clock.svg" onclick="toggleClockDropdown('clockDropdown-3')" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div id="clockDropdown-3" class="clock-dropdown" style="display: none;">
+                                    <form id="clockForm-3">
+                                        <input type="text" class="clock-input" id="clockInput-3" placeholder="ex) 5">분
+                                        <button type="submit">확인</button>
+                                    </form>
+                                </div>
+                                <div class="information-message">
+                                    <input type="text" class="room-message-input" placeholder="안내 메세지 입력">
+                                </div>
+                                <img src="static/icon/send.svg" onclick="showSendAlertBox(this)" style="width: 22px; height: 18px;">
                             </div>
                         </div>
-                        <div class="room-4-container">
+                        <div class="room-4-container room-container">
                             <div class="room-header">
                                 <span class="room-number">4</span>
                                 <span class="room-name">이도연</span>
@@ -335,6 +354,7 @@
                                             <img src="static/icon/profile.png">
                                             <img src="static/icon/profile.png">
                                             <img src="static/icon/profile.png">
+                                            <div id="alertBox" class="message-send-alert-box" style="display: none;">메세지가<br> 전송되었습니다!</div>
                                         </div>
                                     </div>
                                     <div class="game-status-right">
@@ -344,12 +364,20 @@
                                 <div class="room-time">14:05 ~ 15:42</div>
                             </div>
                             <div class="room-footer">
-                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;">
-                                <div class="information-message">안내 메세지</div> 
-                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                                <img src="static/icon/clock.svg" onclick="toggleClockDropdown('clockDropdown-4')" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div id="clockDropdown-4" class="clock-dropdown" style="display: none;">
+                                    <form id="clockForm-4">
+                                        <input type="text" class="clock-input" id="clockInput-4" placeholder="ex) 5">분
+                                        <button type="submit">확인</button>
+                                    </form>
+                                </div>
+                                <div class="information-message">
+                                    <input type="text" class="room-message-input" placeholder="안내 메세지 입력">
+                                </div>
+                                <img src="static/icon/send.svg" onclick="showSendAlertBox(this)" style="width: 22px; height: 18px;">
                             </div>
                         </div>
-                        <div class="room-5-container">
+                        <div class="room-5-container room-container">
                             <div class="room-header">
                                 <span class="room-number">5</span>
                                 <span class="room-name">권민서</span>
@@ -369,6 +397,7 @@
                                             <img src="static/icon/profile.png">
                                             <img src="static/icon/profile.png">
                                             <img src="static/icon/profile.png">
+                                            <div id="alertBox" class="message-send-alert-box" style="display: none;">메세지가<br> 전송되었습니다!</div>
                                         </div>
                                     </div>
                                     <div class="game-status-right">
@@ -378,12 +407,20 @@
                                 <div class="room-time">14:05 ~ 15:42</div>
                             </div>
                             <div class="room-footer">
-                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
-                                <div class="information-message">안내 메세지</div> 
-                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                                <img src="static/icon/clock.svg" onclick="toggleClockDropdown('clockDropdown-5')" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div id="clockDropdown-5" class="clock-dropdown" style="display: none;">
+                                    <form id="clockForm-5">
+                                        <input type="text" class="clock-input" id="clockInput-5" placeholder="ex) 5">분
+                                        <button type="submit">확인</button>
+                                    </form>
+                                </div>
+                                <div class="information-message">
+                                    <input type="text" class="room-message-input" placeholder="안내 메세지 입력">
+                                </div>
+                                <img src="static/icon/send.svg" onclick="showSendAlertBox(this)" style="width: 22px; height: 18px;">
                             </div>
                         </div>
-                        <div class="room-6-container">
+                        <div class="room-6-container room-container">
                             <div class="room-header">
                                 <span class="room-number">6</span>
                                 <span class="room-name"></span>
@@ -403,6 +440,7 @@
                                             <img src="static/icon/profile.png">
                                             <img src="static/icon/profile.png">
                                             <img src="static/icon/profile.png"> -->
+                                            <div id="alertBox" class="message-send-alert-box" style="display: none;">메세지가<br> 전송되었습니다!</div>
                                         </div>
                                     </div>
                                     <div class="game-status-right">
@@ -412,9 +450,17 @@
                                 <div class="room-time">대기실</div>
                             </div>
                             <div class="room-footer">
-                                <img src="static/icon/clock.svg" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
-                                <div class="information-message">안내 메세지</div> 
-                                <img src="static/icon/send.svg" style="width: 22px; height: 18px;">
+                                <img src="static/icon/clock.svg" onclick="toggleClockDropdown('clockDropdown-6')" style="width: 22px; height: 18px;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <div id="clockDropdown-6" class="clock-dropdown" style="display: none;">
+                                    <form id="clockForm-6">
+                                        <input type="text" class="clock-input" id="clockInput-6" placeholder="ex) 5">분
+                                        <button type="submit">확인</button>
+                                    </form>
+                                </div>
+                                <div class="information-message">
+                                    <input type="text" class="room-message-input" placeholder="안내 메세지 입력">
+                                </div>
+                                <img src="static/icon/send.svg" onclick="showSendAlertBox(this)" style="width: 22px; height: 18px;">
                             </div>
                         </div>
                     </div>
