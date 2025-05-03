@@ -651,6 +651,13 @@ header .logo-container > img {
     border-bottom: 1px solid #ccc;
 }
 
+.alarm-1-header-text {
+    color: rgba(107, 87, 63, 1);
+    font-size: 9px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+
 .alarm-1-content {
     display: flex;
     padding: 7px;
@@ -670,7 +677,8 @@ header .logo-container > img {
     height: 62px;
     margin: 8px auto;
     border: 1px solid #ccc;
-    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     color: rgba(107, 87, 63, 1);
 }
 
@@ -682,11 +690,19 @@ header .logo-container > img {
     border-bottom: 1px solid #ccc;
 }
 
+.alarm-2-header-text {
+    color: rgba(107, 87, 63, 1);
+    font-size: 9px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+
 .alarm-2-content {
     display: flex;
-    padding: 7px;
     justify-content: space-between;
     align-items: center;
+    padding: 7px;
+    
     height: 37px;
     font-size: 13px;
     font-weight: bold;
@@ -699,20 +715,40 @@ header .logo-container > img {
 } 
 
 .alarm-2-cancel-text {
-    height: 16px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 132px;
+    height: 15px; 
+    margin: 3px auto;
     background-color: rgba(229, 158, 158, 1);
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
     font-family: 'Inder', sans-serif;
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 400;
+    text-align: center;
+    animation: alarm-2-cancel-text 1s infinite;
+}
+
+.alarm-2-cancel-text:hover {
+    cursor: pointer;
+    background-color: rgba(255, 217, 0, 1);
+    color: rgba(121, 91, 0, 1);
+    font-size: 14px;
     text-align: center;
 }
 
-
-/* 비품관리 시작 */
-.content-box-3 {
-    padding: 14px;
+@keyframes alarm-2-cancel-text {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .content-box-3-header {
